@@ -1,0 +1,46 @@
+{
+  "name": "resume-gen-backend",
+  "version": "1.0.0",
+  "description": "Backend for Resume Generator application",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@google/genai": "^1.14.0",
+    "@google/generative-ai": "^0.24.1",
+    "@prisma/client": "^6.13.0",
+    "@types/express": "^5.0.3",
+    "@types/multer": "^2.0.0",
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "fuse.js": "^7.1.0",
+    "multer": "^2.0.2",
+    "nodemon": "^3.1.10",
+    "pdf-parse": "^1.1.1",
+    "prisma": "^6.13.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/node": "^22.13.10",
+    "@types/pdf-parse": "^1.1.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "keywords": [
+    "resume",
+    "generator",
+    "ai",
+    "backend"
+  ],
+  "author": "",
+  "license": "MIT"
+}

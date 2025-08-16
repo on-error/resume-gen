@@ -1,0 +1,214 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  personalInfo   PersonalInfo?
+  experiences    Experience[]
+  education      Education[]
+  skills         Skill[]
+  projects       Project[]
+  certifications Certification[]
+  languages      Language[]
+  resumes        Resume[]
+}
+
+model PersonalInfo {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Basic Information
+  firstName String
+  lastName  String
+  phone     String?
+  email     String
+
+  // Address
+  address String?
+  city    String?
+  state   String?
+  zipCode String?
+  country String?
+
+  // Professional Links
+  linkedin  String?
+  github    String?
+  portfolio String?
+  website   String?
+
+  // Additional Info
+  summary     String?
+  objective   String?
+  dateOfBirth DateTime?
+  nationality String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Experience {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Job Details
+  jobTitle  String
+  company   String
+  location  String?
+  startDate DateTime
+  endDate   DateTime?
+  isCurrent Boolean   @default(false)
+
+  // Description
+  description      String?
+  achievements     String?
+  responsibilities String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Education {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Institution Details
+  institution  String
+  degree       String
+  fieldOfStudy String
+  location     String?
+
+  // Dates
+  startDate DateTime
+  endDate   DateTime?
+  isCurrent Boolean   @default(false)
+
+  // Academic Info
+  gpa Float?
+
+  // Additional Info
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Skill Details
+  name        String
+  proficiency String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Project Details
+  title        String
+  description  String
+  technologies String[]
+  role         String?
+
+  // Links
+  githubUrl String?
+  liveUrl   String?
+  demoUrl   String?
+  impact    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Certification {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Certification Details
+  name                String
+  issuingOrganization String
+  issueDate           DateTime
+  expiryDate          DateTime?
+  credentialId        String?
+
+  // Additional Info
+  description String?
+  url         String?
+  isExpired   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Language {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Language Details
+  language    String
+  proficiency String // Basic, Conversational, Fluent, Native
+  isNative    Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Resume {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Resume Details
+  title     String
+  template  String? // Template name/type used
+  content   String? // Generated resume content
+  isPublic  Boolean @default(false)
+  isDefault Boolean @default(false)
+
+  // Metadata
+  version       Int       @default(1)
+  lastGenerated DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ResumeTemplate {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  content     String
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
