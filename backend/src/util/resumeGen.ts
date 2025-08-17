@@ -1,10 +1,11 @@
-import prisma from "@/config/database";
+import prisma from "../config/database";
 import { generateText } from "./gemini";
 
 export const resumeGen = async (userId: string, jobDescription: string) => {
   const userDetails = await getUserDetails(userId);
+  console.log('userDetails', userDetails);
   const resumeDetails = await getResumeTemplate('default');
-
+  console.log('resumeDetails', resumeDetails);
   const prompt = `
     Here are all the details for the user and the resume template:
 
@@ -20,8 +21,9 @@ export const resumeGen = async (userId: string, jobDescription: string) => {
     ${jobDescription}
   `;
 
+  console.log('prompt', prompt);
   const resume = await generateText(prompt);
-
+  console.log('resume', resume);
   return resume;
 };
 
@@ -78,4 +80,3 @@ const fetchAsBase64 = async (url: string) => {
     return null;
   }
 }
-

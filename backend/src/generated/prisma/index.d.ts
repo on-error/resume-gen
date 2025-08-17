@@ -12279,6 +12279,7 @@ export namespace Prisma {
     description: string | null
     content: string | null
     imageUrl: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -12289,6 +12290,7 @@ export namespace Prisma {
     description: string | null
     content: string | null
     imageUrl: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -12299,6 +12301,7 @@ export namespace Prisma {
     description: number
     content: number
     imageUrl: number
+    status: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -12311,6 +12314,7 @@ export namespace Prisma {
     description?: true
     content?: true
     imageUrl?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12321,6 +12325,7 @@ export namespace Prisma {
     description?: true
     content?: true
     imageUrl?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12331,6 +12336,7 @@ export namespace Prisma {
     description?: true
     content?: true
     imageUrl?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -12413,7 +12419,8 @@ export namespace Prisma {
     name: string
     description: string
     content: string
-    imageUrl: string | null
+    imageUrl: string
+    status: boolean
     createdAt: Date
     updatedAt: Date
     _count: ResumeTemplateCountAggregateOutputType | null
@@ -12441,6 +12448,7 @@ export namespace Prisma {
     description?: boolean
     content?: boolean
     imageUrl?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["resumeTemplate"]>
@@ -12451,6 +12459,7 @@ export namespace Prisma {
     description?: boolean
     content?: boolean
     imageUrl?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["resumeTemplate"]>
@@ -12461,6 +12470,7 @@ export namespace Prisma {
     description?: boolean
     content?: boolean
     imageUrl?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["resumeTemplate"]>
@@ -12471,11 +12481,12 @@ export namespace Prisma {
     description?: boolean
     content?: boolean
     imageUrl?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ResumeTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "content" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["resumeTemplate"]>
+  export type ResumeTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "content" | "imageUrl" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["resumeTemplate"]>
 
   export type $ResumeTemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ResumeTemplate"
@@ -12485,7 +12496,8 @@ export namespace Prisma {
       name: string
       description: string
       content: string
-      imageUrl: string | null
+      imageUrl: string
+      status: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["resumeTemplate"]>
@@ -12916,6 +12928,7 @@ export namespace Prisma {
     readonly description: FieldRef<"ResumeTemplate", 'String'>
     readonly content: FieldRef<"ResumeTemplate", 'String'>
     readonly imageUrl: FieldRef<"ResumeTemplate", 'String'>
+    readonly status: FieldRef<"ResumeTemplate", 'Boolean'>
     readonly createdAt: FieldRef<"ResumeTemplate", 'DateTime'>
     readonly updatedAt: FieldRef<"ResumeTemplate", 'DateTime'>
   }
@@ -13458,6 +13471,7 @@ export namespace Prisma {
     description: 'description',
     content: 'content',
     imageUrl: 'imageUrl',
+    status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -14363,7 +14377,8 @@ export namespace Prisma {
     name?: StringFilter<"ResumeTemplate"> | string
     description?: StringFilter<"ResumeTemplate"> | string
     content?: StringFilter<"ResumeTemplate"> | string
-    imageUrl?: StringNullableFilter<"ResumeTemplate"> | string | null
+    imageUrl?: StringFilter<"ResumeTemplate"> | string
+    status?: BoolFilter<"ResumeTemplate"> | boolean
     createdAt?: DateTimeFilter<"ResumeTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ResumeTemplate"> | Date | string
   }
@@ -14373,7 +14388,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     content?: SortOrder
-    imageUrl?: SortOrderInput | SortOrder
+    imageUrl?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14386,7 +14402,8 @@ export namespace Prisma {
     name?: StringFilter<"ResumeTemplate"> | string
     description?: StringFilter<"ResumeTemplate"> | string
     content?: StringFilter<"ResumeTemplate"> | string
-    imageUrl?: StringNullableFilter<"ResumeTemplate"> | string | null
+    imageUrl?: StringFilter<"ResumeTemplate"> | string
+    status?: BoolFilter<"ResumeTemplate"> | boolean
     createdAt?: DateTimeFilter<"ResumeTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ResumeTemplate"> | Date | string
   }, "id">
@@ -14396,7 +14413,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     content?: SortOrder
-    imageUrl?: SortOrderInput | SortOrder
+    imageUrl?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ResumeTemplateCountOrderByAggregateInput
@@ -14412,7 +14430,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"ResumeTemplate"> | string
     description?: StringWithAggregatesFilter<"ResumeTemplate"> | string
     content?: StringWithAggregatesFilter<"ResumeTemplate"> | string
-    imageUrl?: StringNullableWithAggregatesFilter<"ResumeTemplate"> | string | null
+    imageUrl?: StringWithAggregatesFilter<"ResumeTemplate"> | string
+    status?: BoolWithAggregatesFilter<"ResumeTemplate"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ResumeTemplate"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ResumeTemplate"> | Date | string
   }
@@ -15335,7 +15354,8 @@ export namespace Prisma {
     name: string
     description: string
     content: string
-    imageUrl?: string | null
+    imageUrl: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15345,7 +15365,8 @@ export namespace Prisma {
     name: string
     description: string
     content: string
-    imageUrl?: string | null
+    imageUrl: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15355,7 +15376,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15365,7 +15387,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15375,7 +15398,8 @@ export namespace Prisma {
     name: string
     description: string
     content: string
-    imageUrl?: string | null
+    imageUrl: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15385,7 +15409,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15395,7 +15420,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16077,6 +16103,7 @@ export namespace Prisma {
     description?: SortOrder
     content?: SortOrder
     imageUrl?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16087,6 +16114,7 @@ export namespace Prisma {
     description?: SortOrder
     content?: SortOrder
     imageUrl?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16097,6 +16125,7 @@ export namespace Prisma {
     description?: SortOrder
     content?: SortOrder
     imageUrl?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }

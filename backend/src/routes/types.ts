@@ -1,5 +1,5 @@
-type Experience = {
-  jobTitle: string;
+export type Experience = {
+  position: string;
   company: string;
   location: string;
   startDate: string;
@@ -10,7 +10,7 @@ type Experience = {
   responsibilities: string[];
 };
 
-type Education = {
+export type Education = {
   institution: string;
   degree: string;
   fieldOfStudy: string;
@@ -19,21 +19,22 @@ type Education = {
   endDate: string;
   isCurrent: boolean;
   description: string;
+  gpa: number;
 };
 
-type Skill = {
+export type Skill = {
   name: string;
   proficiency: string;
 };
 
-type Project = {
+export type Project = {
   title: string;
   description: string;
-  technologies: string[];
+  technologies: string;
   role: string;
 };
 
-type Certification = {
+export type Certification = {
   name: string;
   issuingOrganization: string;
   issueDate: string;
@@ -41,7 +42,7 @@ type Certification = {
   credentialId: string;
 };
 
-type Language = {
+export type Language = {
   name: string;
   proficiency: string;
 };

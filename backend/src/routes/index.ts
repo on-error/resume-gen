@@ -1,6 +1,8 @@
 import { Router } from "express";
 import prisma from "../config/database";
-import { resumeGen } from "@/util/resumeGen";
+import { resumeGen } from "../util/resumeGen";
+import { Experience, Education, Skill, Project, Certification, Language } from "./types";
+import jwt from "jsonwebtoken";
 // import { Experience } from "./types";
 
 const router = Router();
@@ -25,7 +27,25 @@ router.post('/user', async (req, res) => {
       }
     });
 
-    res.status(201).json({ message: 'User created successfully', user, personalInfo });
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || '', { expiresIn: '1y' });
+
+    res.status(201).json({ message: 'User created successfully', user, personalInfo, token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await prisma.user.findUnique({ where: { email } });
+  
+    if(!user || user?.password !== password) {
+      res.status(401).json({ message: 'Invalid credentials' });
+    }
+    const token = jwt.sign({ userId: user?.id }, process.env.JWT_SECRET || '', { expiresIn: '1y' });
+    res.status(200).json({ message: 'Login successful', user, token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -56,7 +76,7 @@ router.post('/personal-info', async (req, res) => {
         website,
         summary,
         objective,
-        dateOfBirth,
+        dateOfBirth: new Date(dateOfBirth || ''),
         nationality,
       }
     });
@@ -75,7 +95,15 @@ router.post('/experience', async (req, res) => {
     const experience = await prisma.experience.createManyAndReturn({
       data: experiences.map((experience: Experience) => ({
         userId,
-        ...experience,
+        jobTitle: experience.position,
+        company: experience.company,
+        location: experience.location,
+        startDate: new Date(experience.startDate || ''),
+        endDate: experience.endDate ? new Date(experience.endDate) : null,
+        isCurrent: experience.isCurrent,
+        description: experience.description,
+        achievements: experience?.achievements || '',
+        responsibilities: experience?.responsibilities || '',
       })),
     });
 
@@ -92,7 +120,15 @@ router.post('/education', async (req, res) => {
     const educationData = await prisma.education.createManyAndReturn({
       data: education.map((education: Education) => ({
         userId,
-        ...education,
+        institution: education.institution,
+        degree: education.degree,
+        fieldOfStudy: education.fieldOfStudy,
+        location: education.location,
+        startDate: new Date(education.startDate || ''),
+        endDate: education.endDate ? new Date(education.endDate) : null,
+        isCurrent: education.isCurrent,
+        gpa: Number(education?.gpa) || '',
+        description: education.description,
       })),
     });
 
@@ -109,7 +145,8 @@ router.post('/skills', async (req, res) => {
     const skillsData = await prisma.skill.createManyAndReturn({
       data: skills.map((skill: Skill) => ({
         userId,
-        ...skill,
+        name: skill.name,
+        proficiency: skill.proficiency,
       })),
     });
 
@@ -126,7 +163,9 @@ router.post('/projects', async (req, res) => {
     const projectsData = await prisma.project.createManyAndReturn({
       data: projects.map((project: Project) => ({
         userId,
-        ...project,
+        title: project.title,
+        description: project.description,
+        technologies: project.technologies.split(',') || [],
       })),
     });
 
@@ -173,17 +212,28 @@ router.post('/languages', async (req, res) => {
 
 router.post('/resume-templates', async (req, res) => {
   try {
-    const { name, description, content, imageUrl } = req.body;
+    const { name, description, imageUrl, isActive, latexCode } = req.body;
     const resumeTemplate = await prisma.resumeTemplate.create({
       data: {
         name,
         description,
-        content,
         imageUrl,
+        status: isActive,
+        content: latexCode || '',
       },
     });
 
     res.status(201).json({ message: 'Resume template created successfully', resumeTemplate });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.get('/resume-templates', async (req, res) => {
+  try {
+    const resumeTemplates = await prisma.resumeTemplate.findMany();
+    res.status(200).json({ message: 'Resume templates fetched successfully', resumeTemplates });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
