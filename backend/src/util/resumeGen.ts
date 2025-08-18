@@ -5,23 +5,23 @@ export const resumeGen = async (userId: string, jobDescription: string) => {
   const userDetails = await getUserDetails(userId);
   console.log('userDetails', userDetails);
   const resumeDetails = await getResumeTemplate('default');
-  console.log('resumeDetails', resumeDetails);
+  // console.log('resumeDetails', resumeDetails);
   const prompt = `
     Here are all the details for the user and the resume template:
 
-    USER DETAILS:
+    USER_DETAILS:
     ${JSON.stringify(userDetails)}
 
     RESUME TEMPLATE:
     templateImageBase64: ${resumeDetails.imageData}
-    Template LaTeX:
+    HTML_RESUME_TEMPLATE:
     ${resumeDetails.content}
 
-    JOB DESCRIPTION:
+    JOB_DESCRIPTION:
     ${jobDescription}
   `;
 
-  console.log('prompt', prompt);
+  // console.log('prompt', prompt);
   const resume = await generateText(prompt);
   console.log('resume', resume);
   return resume;

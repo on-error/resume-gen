@@ -69,6 +69,14 @@ function App() {
               </ProtectedRoute>
             } 
           />
+          <Route 
+            path="/resume-template/:id" 
+            element={
+              <ProtectedRoute>
+                <ResumeTemplatePage />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>

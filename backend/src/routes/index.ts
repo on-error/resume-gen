@@ -240,6 +240,32 @@ router.get('/resume-templates', async (req, res) => {
   }
 });
 
+router.patch('/resume-templates/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, imageUrl, isActive, latexCode } = req.body;
+    const resumeTemplate = await prisma.resumeTemplate.update({
+      where: { id },
+      data: { name, description, imageUrl, status: isActive, content: latexCode || '' },
+    });
+    res.status(200).json({ message: 'Resume template updated successfully', resumeTemplate });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.get('/resume-templates/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resumeTemplate = await prisma.resumeTemplate.findUnique({ where: { id } });
+    res.status(200).json({ message: 'Resume template fetched successfully', resumeTemplate });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 router.post('/generate-resume', async (req, res) => {
   try {
     const { userId, jobDescription } = req.body;

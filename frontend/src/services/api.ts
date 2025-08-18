@@ -137,6 +137,14 @@ export const resumeTemplateAPI = {
     const response = await api.post('/resume-templates', data);
     return response.data;
   },
+  getById: async (id: string) => {
+    const response = await api.get(`/resume-templates/${id}`);
+    return response.data;
+  },
+  update: async (id: string, data: ResumeTemplateData) => {
+    const response = await api.patch(`/resume-templates/${id}`, data);
+    return response.data;
+  },
 };
 
 export default api;

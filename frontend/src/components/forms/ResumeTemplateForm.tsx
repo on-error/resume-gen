@@ -87,6 +87,8 @@ const ResumeTemplateForm: React.FC<ResumeTemplateFormProps> = ({
   const [currentTag, setCurrentTag] = useState('');
   const [tags, setTags] = useState<string[]>(initialData.tags || []);
 
+  console.log(initialData);
+
   const {
     register,
     handleSubmit,

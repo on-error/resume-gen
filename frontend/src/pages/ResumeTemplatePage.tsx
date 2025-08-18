@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -24,10 +24,30 @@ interface User {
 }
 
 const ResumeTemplatePage: React.FC = () => {
+  const { id } = useParams();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [resumeTemplate, setResumeTemplate] = useState<ResumeTemplateData | null>(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  const getResumeTemplate = async () => {
+    setIsFetching(true);
+    const response = await resumeTemplateAPI.getById(id || '');
+    const data = {
+      name: response.resumeTemplate.name,
+      description: response.resumeTemplate.description,
+      imageUrl: response.resumeTemplate.imageUrl,
+      isActive: response.resumeTemplate.status,
+      latexCode: response.resumeTemplate.content,
+      category: response.resumeTemplate.category || '',
+      tags: response.resumeTemplate.tags || [],
+    }
+    setResumeTemplate(data);
+    console.log('Response:', response);
+    setIsFetching(false);
+  }
 
   React.useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -38,6 +58,12 @@ const ResumeTemplatePage: React.FC = () => {
     setUser(JSON.parse(userData));
   }, [navigate]);
 
+  useEffect(() => {
+    if (id) {
+      getResumeTemplate();
+    }
+  }, [id]);
+
   const handleFormSubmit = async (data: ResumeTemplateData) => {
     setIsLoading(true);
     setError('');
@@ -46,8 +72,13 @@ const ResumeTemplatePage: React.FC = () => {
       // You can add API calls here later
       console.log('Template data:', data);
 
-      const response = await resumeTemplateAPI.create(data);
-      console.log('Response:', response);
+      if(id) {
+        const response = await resumeTemplateAPI.update(id, data);
+        console.log('Response:', response);
+      } else {
+        const response = await resumeTemplateAPI.create(data);
+        console.log('Response:', response);
+      }
       
       // Simulate API call
       // await new Promise(resolve => setTimeout(resolve, 2000));
@@ -65,6 +96,16 @@ const ResumeTemplatePage: React.FC = () => {
   if (!user) {
     return <div>Loading...</div>;
   }
+
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+
+  // useEffect(() => {
+  //   if (id) {
+  //     getResumeTemplate();
+  //   }
+  // }, [id]);
 
   return (
     <Box sx={{ 
@@ -139,6 +180,7 @@ const ResumeTemplatePage: React.FC = () => {
 
         {/* Template Form */}
         <ResumeTemplateForm
+          initialData={resumeTemplate || {}}
           onSubmit={handleFormSubmit}
           isLoading={isLoading}
           error={error}
