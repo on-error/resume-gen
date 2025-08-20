@@ -117,6 +117,21 @@ const MAIN_PROMPT = `
  *
  * 3. JOB_DESCRIPTION:
  * - A plain text job description that the resume should be tailored for.
+ * 
+  * 4. JOB_DESCRIPTION_ANALYSIS:
+    - Extract primary job function and industry
+    - Identify required skills and experience level
+    - Analyze company culture indicators
+
+  * 5. ATS_OPTIMIZATION_REQUIREMENTS:
+    - Use standard job titles and skill names
+    - Maintain optimal keyword density
+    - Ensure clean formatting
+
+  * 6. CONTENT_VALIDATION:
+    - Score content relevance (0-100)
+    - Validate quantifiable achievements
+    - Ensure one-page constraint
  *
  * INSTRUCTIONS:
  * - **Populate the HTML_RESUME_TEMPLATE by replacing all content placeholders** with data from USER_DETAILS.
@@ -156,7 +171,7 @@ const getPrompt = (details: string) => `
     ${details}
     `;
 
-const generateText = async (details: string) => {
+export const generateText = async (details: string) => {
   try {
     // If you want to send the base64 string of an image along with the other prompt details,
     // you can include it as part of the prompt content (as a field in your details string/object).
@@ -178,4 +193,12 @@ const generateText = async (details: string) => {
   }
 };
 
-export { generateText };
+const getResponseFromGemini = async (prompt: string) => {
+  const response = await gemini.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: prompt,
+  });
+  return response?.text;
+}
+
+export { getResponseFromGemini };
