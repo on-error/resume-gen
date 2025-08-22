@@ -41,6 +41,8 @@ export const resumeGen = async (userId: string, jobDescription: string) => {
 
   const finalResume = await atsService.preprocessForATS(industryOptimized || '', jobDescription);
 
+  console.log('Final Resume: ', finalResume);
+
   return finalResume;
 };
 
@@ -73,7 +75,7 @@ export const getUserDetails = async (userId: string) => {
   return JSON.stringify(user);
 }
 
-const getResumeTemplate = async (templateName: string) => {
+export const getResumeTemplate = async (templateName?: string) => {
   const templates = await prisma.resumeTemplate.findMany();
 
   if(templates.length === 0) {

@@ -27,11 +27,19 @@ export class ATSOptimizationService {
 
   async preprocessForATS(content: string, jobDescription: string) {
     const jobTitle = await this.extractJobTitle(jobDescription);
+    console.log('Job Title: ', jobTitle);
+
     const standardisedJobTitle = this.standardiseJobTitle(jobTitle);
+    console.log('Standardised Job Title: ', standardisedJobTitle);
 
     const optimizedContent = this.optimiseActionVerbs(content);
+    console.log('Optimised Content: ', optimizedContent);
+
     const skills = await this.extractSkills(jobDescription);
+    console.log('Skills: ', skills);
+
     const standardisedSkills = this.standardiseSkills(skills);
+    console.log('Standardised Skills: ', standardisedSkills);
 
     const keywordsOptimized = this.optimiseKeywordsDensity(
       optimizedContent,

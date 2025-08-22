@@ -1,5 +1,5 @@
 import { getResponseFromGemini } from "./gemini";
-import { getUserDetails } from "./resumeGen";
+import { getResumeTemplate, getUserDetails } from "./resumeGen";
 
 export class ContentGenerationPipeline {
   async generateResume(userId: string, jobDescription: string) {
@@ -11,7 +11,7 @@ export class ContentGenerationPipeline {
     console.log('Content Analysis: ', analysis);
 
     const optimisedContent = await this.generateOptimisedContent(analysis);
-    console.log('Optimised Content generated');
+    console.log('Optimised Content generated', optimisedContent);
 
     const atsValidated = await this.validateATS(optimisedContent || '', jobDescription);
     console.log('ATS Validated');
@@ -76,10 +76,12 @@ export class ContentGenerationPipeline {
   }
 
   private async generateOptimisedContent(analysis: any) {
+    const resumeTemplate = await getResumeTemplate();
     const prompt = `
-      Based on the content analysis, generate optimized resume content:
+      Based on the content analysis, generate optimized resume content, also use the provided resume template to generate the content:
       
       Analysis: ${JSON.stringify(analysis)}
+      Resume Template: ${resumeTemplate}
       
       Generate content that:
       1. Addresses missing keywords
@@ -87,7 +89,16 @@ export class ContentGenerationPipeline {
       3. Adds quantifiable achievements
       4. Fills content gaps
       5. Maintains one-page constraint
-      
+      6. Use the resume template to generate the content
+      7. Make sure to have enough content to fill the resume template, do not leave any empty sections
+      8. Do not make the changes to the html structure of the resume template, only add content to the sections
+      9. Do not add any other new sections, only add content to the existing sections, if the section is not present in the resume template, do not add it
+      10. Use the user's details to generate the content, do not make up any details
+      11. Replace the name and email and other stuff in the resume template with the user's details
+      12. Make sure the generated resume if of user's details, and not just any random things which are given in resume template.
+      13. Strictly follow the resume template.
+      14. Do not add summary section if it is not given in the template and return the full output.
+     
       Return the optimized content in HTML format.
 
       DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
