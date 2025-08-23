@@ -17,6 +17,7 @@ import {
   AutoAwesome as AutoAwesomeIcon,
 } from '@mui/icons-material';
 import JobDescriptionForm from '../components/forms/JobDescriptionForm';
+import ResumePreview from '../components/ResumePreview';
 import { resumeAPI } from '../services/api';
 
 interface User {
@@ -30,6 +31,7 @@ const JobDescriptionPage: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [generatedResume, setGeneratedResume] = useState('');
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -65,15 +67,40 @@ const JobDescriptionPage: React.FC = () => {
     setError('');
 
     try {
-      // You can add API calls here later
       console.log('Generating resume for job:', data);
       
-      const response = await resumeAPI.generate({ userId: user?.id || '', jobDescription: data.jobDescription });
+      const response = await resumeAPI.generate({ 
+        userId: user?.id || '', 
+        jobDescription: data.jobDescription 
+      });
       
-      setSuccessMessage('Targeted resume generated successfully! Redirecting to resume builder...');
+      setGeneratedResume(response.resume);
+      setSuccessMessage('Targeted resume generated successfully!');
       
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to generate resume.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleRegenerateResume = async () => {
+    if (!user) return;
+    
+    setIsGenerating(true);
+    setError('');
+
+    try {
+      const response = await resumeAPI.generate({ 
+        userId: user.id, 
+        jobDescription: 'Regenerate with same job description' 
+      });
+      
+      setGeneratedResume(response.resume);
+      setSuccessMessage('Resume regenerated successfully!');
+      
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to regenerate resume.');
     } finally {
       setIsGenerating(false);
     }
@@ -162,6 +189,17 @@ const JobDescriptionPage: React.FC = () => {
           isGenerating={isGenerating}
           error={error}
         />
+
+        {/* Resume Preview */}
+        {generatedResume && (
+          <Box sx={{ mt: 4 }}>
+            <ResumePreview
+              resumeHtml={generatedResume}
+              isLoading={isGenerating}
+              onRegenerate={handleRegenerateResume}
+            />
+          </Box>
+        )}
       </Container>
 
       {/* Success Snackbar */}

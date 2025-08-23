@@ -42,7 +42,7 @@ export class ContentGenerationPipeline {
       
       Job Description: ${jobDescription}
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the JSON object. Do NOT include any markdown formatting like \`\`\`json or \`\`\` or any other markdown syntax. Return pure JSON only.
     `;
 
     const response = await getResponseFromGemini(prompt);
@@ -68,7 +68,7 @@ export class ContentGenerationPipeline {
       "contentGaps": ["No leadership experience mentioned", "Missing industry-specific certifications"]
       }
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the JSON object. Do NOT include any markdown formatting like \`\`\`json or \`\`\` or any other markdown syntax. Return pure JSON only.
     `;
 
     const analysis = await getResponseFromGemini(prompt);
@@ -101,7 +101,7 @@ export class ContentGenerationPipeline {
      
       Return the optimized content in HTML format.
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the HTML content. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
     `;
 
     const response = await getResponseFromGemini(prompt);
@@ -125,7 +125,7 @@ export class ContentGenerationPipeline {
       If issues found, provide corrected version.
       Return only the corrected HTML content.
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the HTML content. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
     `;
 
     const response = await getResponseFromGemini(prompt);
@@ -145,7 +145,7 @@ export class ContentGenerationPipeline {
       4. Final keyword density check
       5. Grammar and style polish
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the optimized content. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure content only.
     `;
 
     const response = await getResponseFromGemini(prompt);

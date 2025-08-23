@@ -1,62 +1,21 @@
-import prisma from "../config/database";
-import { ContentGenerationPipeline } from "./contentPipeline";
-import { generateText, getResponseFromGemini } from "./gemini";
-import { IndustryRulesService } from "./industryRules";
-import { ATSOptimizationService } from "./atsOptimization";
+import { optimizedResumeGen } from "./optimizedResumeGen";
 
 export const resumeGen = async (userId: string, jobDescription: string) => {
-  // const userDetails = await getUserDetails(userId);
-  // console.log('userDetails', userDetails);
-  // const resumeDetails = await getResumeTemplate('default');
-  // // console.log('resumeDetails', resumeDetails);
-  // const prompt = `
-  //   Here are all the details for the user and the resume template:
-
-  //   USER_DETAILS:
-  //   ${JSON.stringify(userDetails)}
-
-  //   RESUME TEMPLATE:
-  //   templateImageBase64: ${resumeDetails.imageData}
-  //   HTML_RESUME_TEMPLATE:
-  //   ${resumeDetails.content}
-
-  //   JOB_DESCRIPTION:
-  //   ${jobDescription}
-  // `;
-
-  // // console.log('prompt', prompt);
-  // const resume = await generateText(prompt);
-  // console.log('resume', resume);
-  // return resume;
-
-  const atsService = new ATSOptimizationService();
-  const pipeline = new ContentGenerationPipeline();
-  const industryService = new IndustryRulesService();
-
-  const industry = await detectIndustry(jobDescription);
-
-  const resume = await pipeline.generateResume(userId, jobDescription)
-
-  const industryOptimized = await industryService.applyIndustryRules(resume || '', industry);
-
-  const finalResume = await atsService.preprocessForATS(industryOptimized || '', jobDescription);
-
-  console.log('Final Resume: ', finalResume);
-
-  return finalResume;
+  try {
+    const resume = await optimizedResumeGen(userId, jobDescription);
+    console.log('Resume generated successfully');
+    return resume;
+  } catch (error) {
+    console.error('Error generating resume:', error);
+    throw error;
+  }
 };
 
-const detectIndustry = async (jobDescription: string) => {
-  const prompt = `
-    Analyze this job description and identify the industry it belongs to.
-    Return only the industry name, nothing else.
-  `;
-  
-  const response = await getResponseFromGemini(prompt);
-  return response?.trim() || '';
-}
-
+// Keep the getUserDetails function for backward compatibility
 export const getUserDetails = async (userId: string) => {
+  const { PrismaClient } = require('@prisma/client');
+  const prisma = new PrismaClient();
+  
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -73,9 +32,12 @@ export const getUserDetails = async (userId: string) => {
   });
 
   return JSON.stringify(user);
-}
+};
 
 export const getResumeTemplate = async (templateName?: string) => {
+  const { PrismaClient } = require('@prisma/client');
+  const prisma = new PrismaClient();
+  
   const templates = await prisma.resumeTemplate.findMany();
 
   if(templates.length === 0) {

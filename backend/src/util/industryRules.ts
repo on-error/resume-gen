@@ -82,7 +82,7 @@ export class IndustryRulesService {
       Reorganize the content to emphasize the priority sections while maintaining the HTML structure.
       Return the reorganized HTML content.
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the HTML content. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
     `;
 
     const response = await getResponseFromGemini(prompt);
@@ -101,7 +101,7 @@ export class IndustryRulesService {
       Adjust the tone, language, and emphasis to match industry expectations.
       Return the style-optimized HTML content.
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the HTML content. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
     `;
 
     const response = await getResponseFromGemini(prompt);
@@ -120,7 +120,7 @@ export class IndustryRulesService {
       Adjust the tone, language, and emphasis to match industry expectations.
       Return the style-optimized HTML content.
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the HTML content. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
     `;
 
     const response = await getResponseFromGemini(prompt);
@@ -138,7 +138,7 @@ export class IndustryRulesService {
       Add relevant metrics and achievements that matter in this industry.
       Return the metrics-enhanced HTML content.
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the HTML content. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
     `;
 
     const response = await getResponseFromGemini(prompt);
@@ -156,7 +156,7 @@ export class IndustryRulesService {
       Condense the content while maintaining quality and relevance.
       Return the length-optimized HTML content. 
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the HTML content. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
     `;
 
     const response = await getResponseFromGemini(prompt);

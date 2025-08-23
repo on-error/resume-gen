@@ -55,7 +55,8 @@ export class ATSOptimizationService {
       Job Description: ${jobDescription}
       
       Job Title:
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      
+      IMPORTANT: Return ONLY the job title. Do NOT include any markdown formatting like \`\`\`json or \`\`\` or any other markdown syntax. Return pure text only.
       `;
     const jobTitle = await getResponseFromGemini(prompt);
 
@@ -71,7 +72,7 @@ export class ATSOptimizationService {
       
       Skills:
 
-      DO NOT INCLUDE ANY MARKDOWN like "\`\`\`json" or "\`\`\`" or any other markdown syntax.
+      IMPORTANT: Return ONLY the comma-separated skills list. Do NOT include any markdown formatting like \`\`\`json or \`\`\` or any other markdown syntax. Return pure text only.
       `;
     const skills = await getResponseFromGemini(prompt);
 
