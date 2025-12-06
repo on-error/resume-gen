@@ -85,7 +85,7 @@ const getResumeTemplate = async () => {
 
 const analyzeJobAndExtractInfo = async (jobDescription: string) => {
   const prompt = `
-    Analyze this job description comprehensively and extract key information for resume optimization:
+    Analyze this job description comprehensively and extract key information for resume optimization and content filtering:
     
     Job Description: ${jobDescription}
     
@@ -99,7 +99,11 @@ const analyzeJobAndExtractInfo = async (jobDescription: string) => {
       "keywords": ["keyword1", "keyword2", "keyword3"],
       "quantifiableRequirements": ["requirement1", "requirement2"],
       "atsKeywords": ["ats_keyword1", "ats_keyword2"],
-      "standardJobTitle": "standardized job title for ATS"
+      "standardJobTitle": "standardized job title for ATS",
+      "relevantTechnologies": ["tech1", "tech2", "tech3"],
+      "experienceKeywords": ["keyword1", "keyword2", "keyword3"],
+      "projectKeywords": ["keyword1", "keyword2", "keyword3"],
+      "certificationKeywords": ["keyword1", "keyword2", "keyword3"]
     }
     
     Focus on:
@@ -108,6 +112,9 @@ const analyzeJobAndExtractInfo = async (jobDescription: string) => {
     3. Industry-specific keywords
     4. Experience level indicators
     5. Quantifiable requirements
+    6. Technologies and tools for filtering relevant experience
+    7. Keywords to identify relevant projects and certifications
+    8. Experience-related terms for filtering work history
     
     IMPORTANT: Return ONLY the JSON object. Do NOT include any markdown formatting like \`\`\`json or \`\`\` or any other markdown syntax. Return pure JSON only.
   `;
@@ -130,7 +137,11 @@ const analyzeJobAndExtractInfo = async (jobDescription: string) => {
       keywords: [],
       quantifiableRequirements: [],
       atsKeywords: [],
-      standardJobTitle: ''
+      standardJobTitle: '',
+      relevantTechnologies: [],
+      experienceKeywords: [],
+      projectKeywords: [],
+      certificationKeywords: []
     };
   }
 };
@@ -180,12 +191,40 @@ const generateOptimizedContent = async (
     4. Use the user's REAL location: ${userDetails.personalInfo?.city || ''}, ${userDetails.personalInfo?.state || ''}
     5. Use the user's REAL LinkedIn: ${userDetails.personalInfo?.linkedin || ''}
     6. Use the user's REAL GitHub: ${userDetails.personalInfo?.github || ''}
-    7. Populate experience section with user's REAL work experience, optimized for ATS
-    8. Populate education section with user's REAL education
-    9. Populate skills section with user's REAL skills, prioritizing job requirements
-    10. Populate projects section with user's REAL projects, emphasizing relevant technologies
-    11. Populate certifications section with user's REAL certifications
-    12. Populate languages section with user's REAL languages
+
+    EXPERIENCE FILTERING RULES (CRITICAL):
+    - ONLY include work experience that is RELEVANT to the job description
+    - Filter experiences based on: ${jobAnalysis.requiredSkills.join(', ')} and ${jobAnalysis.relevantTechnologies.join(', ')}
+    - Include experiences that demonstrate: ${jobAnalysis.experienceKeywords.join(', ')}
+    - Skip experiences that don't align with the job requirements
+    - Prioritize recent and relevant experiences over older, less relevant ones
+    - Maximum 3-4 most relevant experiences to fit on one page
+
+    EDUCATION FILTERING:
+    - Include only relevant education for the position
+    - Emphasize degrees/certifications that match job requirements
+    - Skip irrelevant coursework or certifications
+
+    SKILLS FILTERING:
+    - Prioritize skills that match: ${jobAnalysis.requiredSkills.join(', ')}
+    - Include only relevant technical and soft skills
+    - Skip skills that don't align with job requirements
+    - Maximum 8-10 most relevant skills
+
+    PROJECTS FILTERING:
+    - Include only projects that demonstrate: ${jobAnalysis.requiredSkills.join(', ')} and ${jobAnalysis.projectKeywords.join(', ')}
+    - Focus on projects relevant to the job description
+    - Skip projects that don't align with job requirements
+    - Maximum 2-3 most relevant projects
+
+    ONE-PAGE CONSTRAINT (CRITICAL):
+    - Ensure the resume fits on exactly ONE page
+    - Use concise, bullet-point format for all sections
+    - Limit each experience to 3-4 bullet points maximum
+    - Keep descriptions brief but impactful
+    - Use quantifiable achievements (numbers, percentages)
+    - Avoid verbose descriptions or unnecessary details
+    - If content is too long, prioritize the most relevant items
 
     TEMPLATE PLACEHOLDERS TO REPLACE:
     - [FULL_NAME] → User's actual full name
@@ -195,26 +234,27 @@ const generateOptimizedContent = async (
     - [LOCATION] → User's actual location (city, state)
     - [LINKEDIN] → User's actual LinkedIn URL
     - [GITHUB] → User's actual GitHub URL
-    - [EXPERIENCE_SECTION] → User's actual work experience (ATS-optimized)
-    - [EDUCATION_SECTION] → User's actual education
-    - [SKILLS_SECTION] → User's actual skills (prioritized for job)
-    - [PROJECTS_SECTION] → User's actual projects (emphasizing relevant tech)
-    - [CERTIFICATIONS_SECTION] → User's actual certifications
-    - [LANGUAGES_SECTION] → User's actual languages
+    - [EXPERIENCE_SECTION] → User's RELEVANT work experience only (filtered for job description)
+    - [EDUCATION_SECTION] → User's RELEVANT education only
+    - [SKILLS_SECTION] → User's RELEVANT skills only (prioritized for job)
+    - [PROJECTS_SECTION] → User's RELEVANT projects only (filtered for job description)
+    - [CERTIFICATIONS_SECTION] → User's RELEVANT certifications only
+    - [LANGUAGES_SECTION] → User's RELEVANT languages only
 
     CONTENT RULES:
-    - ONLY include sections that have user data (omit empty sections)
-    - Tailor content to match job description and extracted keywords
+    - ONLY include sections that have RELEVANT user data (omit empty sections)
+    - Filter ALL content based on job description relevance
     - Use action verbs and quantifiable achievements (increased by X%, led team of Y, etc.)
-    - Ensure the resume fits on one page
+    - Ensure the resume fits on exactly ONE page
     - Maintain the exact HTML structure and CSS styling
     - DO NOT use example/placeholder names or data
     - DO NOT add sections that don't exist in the template
     - DO NOT modify HTML structure or CSS
     - Optimize for ATS scanning and human readability
     - Use industry-specific language and metrics
+    - Be selective and concise - quality over quantity
 
-    IMPORTANT: Return ONLY the complete HTML resume with user data populated and ATS-optimized. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
+    IMPORTANT: Return ONLY the complete HTML resume with RELEVANT user data populated and ATS-optimized. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
   `;
 
   const response = await getResponseFromGemini(prompt);
@@ -228,14 +268,28 @@ const finalizeAndValidateATS = async (content: string, jobDescription: string, a
     Resume Content: ${content}
     Job Description: ${jobDescription}
     
-    Validate and optimize for:
-    1. ATS compatibility (standard job titles, clean formatting)
-    2. Keyword density optimization (2-3% for important keywords)
-    3. Action verb usage (replace weak verbs with strong ones)
-    4. Quantifiable achievements (add numbers where possible)
-    5. Grammar and style polish
-    6. One-page constraint enforcement
-    7. Industry-specific terminology accuracy
+    CRITICAL VALIDATION REQUIREMENTS:
+    1. ONE-PAGE CONSTRAINT: Ensure resume fits on exactly one page
+    2. RELEVANCE FILTERING: Verify all content is relevant to the job description
+    3. ATS compatibility (standard job titles, clean formatting)
+    4. Keyword density optimization (2-3% for important keywords)
+    5. Action verb usage (replace weak verbs with strong ones)
+    6. Quantifiable achievements (add numbers where possible)
+    7. Grammar and style polish
+    8. Industry-specific terminology accuracy
+    
+    ONE-PAGE ENFORCEMENT:
+    - If content exceeds one page, remove least relevant items
+    - Prioritize recent and job-relevant experiences
+    - Keep only the most impactful bullet points
+    - Ensure concise, scannable format
+    - Remove any redundant or verbose content
+    
+    RELEVANCE VALIDATION:
+    - Verify all experiences relate to job requirements
+    - Confirm skills match job description keywords
+    - Ensure projects demonstrate relevant technologies
+    - Remove any content that doesn't align with the position
     
     ATS Optimization Rules:
     - Use standard job titles that ATS systems recognize
@@ -245,7 +299,7 @@ const finalizeAndValidateATS = async (content: string, jobDescription: string, a
     - Quantify achievements with specific numbers
     - Avoid fancy formatting, colors, or graphics
     
-    IMPORTANT: Return ONLY the final optimized HTML resume content. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
+    IMPORTANT: Return ONLY the final optimized HTML resume content that fits on ONE page with RELEVANT content only. Do NOT include any markdown formatting like \`\`\`html or \`\`\` or any other markdown syntax. Return pure HTML only.
   `;
 
   const response = await getResponseFromGemini(prompt);

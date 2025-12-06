@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "resume gen",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Helps you generate better ATS optimized resume for every unique JOB description",
+    "description": "The description of the application"
+  }
+}

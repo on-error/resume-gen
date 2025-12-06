@@ -1,0 +1,55 @@
+{
+  "name": "__MSG_appName__",
+  "version": "0.0.2",
+  "manifest_version": 3,
+  "description": "__MSG_appDescription__",
+  "icons": {
+    "16": "images/icon-16.png",
+    "128": "images/icon-128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "service_worker": "scripts.babel/background.js"
+  },
+  "permissions": [
+    "tabs",
+    "notifications",
+    "pageCapture",
+    "tabGroups"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "scripts/contentscript.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "19": "images/icon-19.png",
+      "38": "images/icon-38.png"
+    },
+    "default_title": "resume gen",
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["images/icon-48.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
